@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
     res.send('Server running on port 5000 successfully!');
   });
 
-// User route
+//  Creating a user
 
 app.post("/api/users",async(req,res)=>{
   try {
@@ -39,3 +39,34 @@ app.post("/api/users",async(req,res)=>{
   })
   }
 });
+
+
+// Getting all users
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find({}); // Retrieve all users from the database
+    res.status(200).json(users); // Send the list of users as a JSON response
+  } catch (err) {
+    res.status(500).send('Server Error'); // Send a 500 status code if an error occurs
+  }
+});
+
+// Get users by id
+app.get('/api/users/:id', async(req,res)=>{
+
+  try {
+
+    const { id } =req.params
+    const user  = await User.findById(id)
+    if(!user){
+     return res.status(404).send("User not found")
+    }
+    res.json(user)
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+})
+
+
