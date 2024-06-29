@@ -70,3 +70,48 @@ app.get('/api/users/:id', async(req,res)=>{
 })
 
 
+// Updating a user
+
+app.put("/api/users/:id", async(req,res)=>{
+
+  try {
+    const { id } =req.params
+    const user  = await User.findByIdAndUpdate(id,req.body)
+    if(!user){
+     return res.status(404).send("User not updated")
+    }
+    const updatedUser = await User.findById(id);
+    res.status(200).json(updatedUser)
+    
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).send("User not updated")
+    
+  }
+})
+
+
+
+// Deleteing a user
+
+app.delete("/api/users/:id", async(req, res)=>{
+   try {
+
+    const { id } = req.params
+
+    const user = await User.findByIdAndDelete(id);
+
+    if(!user){
+
+      res.status(404).json({message:"user not found"})
+    }
+    res.status(200).json({message:"User deleted successfully"})
+    
+   } catch (error) {
+    res.status(500).json({message:"User cant be deleted"})
+    
+   }
+})
+
+
